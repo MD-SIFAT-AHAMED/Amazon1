@@ -1,0 +1,17 @@
+.cartContainer{
+    display: flex;
+    gap: 20px;
+    border-bottom: 1px solid gray;
+    margin: 20px 0px;
+}
+.addBtn{
+    background: #ff9800;
+    padding: 5px;
+    color: white;
+    font-size: 15px;
+    border: none;
+    border-radius: 5px;
+}
+.pdName{
+    color: rgb(11, 63, 167);
+}
