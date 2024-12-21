@@ -6,7 +6,6 @@ import { Link } from 'react-router';
 const Cart = (props) => {
     const {name,img,price,key,seller,stock} =props.product;
     const addProductHandler= props.addProductHandler;
-    console.log(props)
     return (
         <div className='cartContainer'>
             <div>
