@@ -2,13 +2,19 @@ import React, { useState } from 'react';
 import "./Shop.css";
 import fakeData from './../../fakeData/index';
 import Cart from '../Cart/Cart';
+import { Link } from 'react-router';
+import { addToDatabaseCart } from '../../utilities/fakedb';
 const Shop = () => {
     const first10 = fakeData.slice(0,10);
     const [product,setProduct] = useState(first10);
     const [cart,setCart] = useState([]);
+
     const addProductHandler = (product)=>{
         const newCart = [...cart,product];
         setCart(newCart);
+        const sameProduct = newCart.filter(pd=> pd.key===product.key);
+        const count = sameProduct.length;
+        addToDatabaseCart(product.key,count);
     }
     const total = cart.reduce((total,item) =>total + item.price,0);
     let shipping =0;
@@ -35,7 +41,7 @@ const Shop = () => {
         <div className='shopContainer'>
             <div className="productContainer">
                 {
-                    product.map(product => <Cart product={product} addProductHandler={addProductHandler}></Cart>)
+                    product.map(product => <Cart addToCartShow={false} product={product} addProductHandler={addProductHandler}></Cart>)
                 }
             </div>
             <div className="reviewContainer">
@@ -45,6 +51,9 @@ const Shop = () => {
                 <p>Shipping cost: {shipping}</p>
                 <p>Tax + vat: {tax}</p>
                 <h4>Toatl Price: {grandTotal}</h4>
+                <Link to="/review">
+                    <button className="addBtn">Review</button>
+                </Link>
             </div>
         </div>
     );
