@@ -4,6 +4,7 @@ import fakeData from './../../fakeData/index';
 import Cart from '../Cart/Cart';
 import { addToDatabaseCart, getDatabaseCart } from '../../utilities/fakedb';
 import ReviewCart from '../ReviewCart/ReviewCart';
+import { Link } from 'react-router';
 const Shop = () => {
     const first10 = fakeData.slice(0,10);
     const [product,setProduct] = useState(first10);
@@ -49,7 +50,11 @@ const Shop = () => {
                 }
             </div>
             <div className="reviewContainer">
-                <ReviewCart cart={cart}></ReviewCart>
+                <ReviewCart cart={cart}>
+                    <Link to="/review">
+                        <button className="addBtn">Review</button>
+                    </Link>
+                </ReviewCart>
             </div>
         </div>
     );

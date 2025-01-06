@@ -6,7 +6,7 @@ import Cart from '../Cart/Cart';
 const ProductDetails = () => {
     const {producyKey}=useParams();
     const product =fakeData.find(pd=> pd.key===producyKey);
-    console.log(product);
+    // console.log(product);
     return (
         <div>
             <h1> {producyKey} Your Product details </h1>
