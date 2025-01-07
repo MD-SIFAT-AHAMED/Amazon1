@@ -3,6 +3,8 @@ import { getAuth,updateProfile,signInWithEmailAndPassword, signInWithPopup,creat
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from './firebase_config';
 import { UserContext } from '../../App';
+import { use } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 // Initialize Firebase app
 initializeApp(firebaseConfig);
 const Login = () => {
@@ -14,6 +16,12 @@ const Login = () => {
     password:"",
     photo:""
   });
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const {from} = location.state || {from: {pathname: "/"}};
+
+
   const [loggedInUser,setLoggedInUser] = useContext(UserContext);
   const provider = new GoogleAuthProvider();
   const handelSignIn =()=>{
@@ -84,6 +92,7 @@ const Login = () => {
         userInfo.success=true;
         setUsers(userInfo);
         setLoggedInUser(userInfo);
+        navigate(from.pathname,{replace:true});
         console.log(result.user);
       })
       .catch((error) => {
