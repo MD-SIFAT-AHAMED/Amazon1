@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { UserContext } from '../../App';
 import { use } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import { initializeLoginFramework,handelLogOut , handelGoggleSignIn} from '../LoginManager/LoginManager';
+import { initializeLoginFramework,handelLogOut , handelGoggleSignIn, createUserEmailAndPassword, signInEmailAndPassword} from '../LoginManager/LoginManager';
 
 // Initialize Firebase app
 const Login = () => {
@@ -28,12 +28,18 @@ const Login = () => {
   const handelSubmit=(e)=>{
     if(newUser && users.email && users.password)
     {
-       
+       createUserEmailAndPassword(users.name,users.email,users.password)
+       .then(res=>{
+        handelResponse(res,true);
+      })
     }
-
+ 
     if(!newUser && users.email && users.password)
     {
-      
+      signInEmailAndPassword(users.email, users.password)
+      .then(res=>{
+        handelResponse(res,true);
+      })
     }
     e.preventDefault();
   }
@@ -56,20 +62,24 @@ const Login = () => {
       setUsers(newUserInfo);
     }
   }
+  const handelResponse=(res,redirect)=>{
+      setUsers(res);
+      setLoggedInUser(res);
+      if(redirect)
+      {
+        navigate(from.pathname,{replace:true});
+      }
+  }
    const handelwithGoggleSignIn=()=>{
       handelGoggleSignIn()
       .then(res=>{
-        setUsers(res);
-        setLoggedInUser(res);
-        navigate(from.pathname,{replace:true});
+        handelResponse(res,true);
       })
    }
    const handelLoggedOut=()=>{
     handelLogOut()
     .then(res=>{
-      setNewUser(res);
-      setLoggedInUser(res);
-      
+      handelResponse(res,false);
     })
     
    }

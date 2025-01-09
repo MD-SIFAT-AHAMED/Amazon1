@@ -16,7 +16,8 @@ export const handelGoggleSignIn =()=>{
         isSignIn:true,
         name:displayName,
         email:email,
-        photo:photoURL
+        photo:photoURL,
+        success:true
       }
        return signInUser;
     })
@@ -45,40 +46,37 @@ export const handelLogOut=()=>{
     })
   }
 
-export const createUserEmailAndPassword =()=>{
+export const createUserEmailAndPassword =(name,email,password)=>{
     const auth = getAuth();
-            createUserWithEmailAndPassword(auth, users.email, users.password)
+            return createUserWithEmailAndPassword(auth, email, password)
             .then((result) => {
-              const userInfo={...users};
+              const userInfo=result.user;
               userInfo.error='';
               userInfo.success=true;
-              setUsers(userInfo);
+              updateUserName(name);
+              return userInfo;
             })
             .catch((error) => {
-              const userInfo = {...users};
+              const userInfo = {};
               userInfo.error = "User alredy existe";
               userInfo.success=false;
-              setUsers(userInfo);
-              updateUserName(users.name);
+              return userInfo;
             });
 }
-export const signInEmailAndPassword =()=>{
+export const signInEmailAndPassword =(email,password)=>{
     const auth = getAuth();
-      signInWithEmailAndPassword(auth, users.email, users.password)
-      .then((result) => {
-        const userInfo={...users};
+      return signInWithEmailAndPassword(auth,email,password)
+      .then(res => {
+        const userInfo=res.user;
         userInfo.error='';
         userInfo.success=true;
-        setUsers(userInfo);
-        setLoggedInUser(userInfo);
-        navigate(from.pathname,{replace:true});
-        console.log(result.user);
+        return userInfo;
       })
       .catch((error) => {
-        const userInfo = {...users};
+        const userInfo = {};
         userInfo.error = "Invalid email or password";
         userInfo.success=false;
-        setUsers(userInfo);
+        return userInfo;
       });
 }
 
