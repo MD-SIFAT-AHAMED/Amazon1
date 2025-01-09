@@ -1,12 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { getAuth,updateProfile,signInWithEmailAndPassword, signInWithPopup,createUserWithEmailAndPassword, GoogleAuthProvider, signOut } from "firebase/auth";
-import { initializeApp } from 'firebase/app';
-import firebaseConfig from './firebase_config';
 import { UserContext } from '../../App';
 import { use } from 'react';
 import { useLocation, useNavigate } from 'react-router';
+import { initializeLoginFramework,handelLogOut , handelGoggleSignIn} from '../LoginManager/LoginManager';
+
 // Initialize Firebase app
-initializeApp(firebaseConfig);
 const Login = () => {
   const [newUser,setNewUser]=useState(false);
   const [users,setUsers] = useState({
@@ -21,86 +19,21 @@ const Login = () => {
   const navigate = useNavigate();
   const {from} = location.state || {from: {pathname: "/"}};
 
+  initializeLoginFramework();
 
   const [loggedInUser,setLoggedInUser] = useContext(UserContext);
-  const provider = new GoogleAuthProvider();
-  const handelSignIn =()=>{
-    const auth = getAuth();
-    signInWithPopup(auth,provider)
-    .then((result)=>{
-      const {displayName,email,photoURL} = result.user;
-      const signInUser={
-        isSignIn:true,
-        name:displayName,
-        email:email,
-        photo:photoURL
-      }
-      setUsers(signInUser);
-    })
-    .catch(err=>{
-      console.log(err)
-    })
-  }
-  const handelLogOut=()=>{
-    const auth = getAuth();
-    signOut(auth)
-    .then(()=>{
-      const LogOutUser={
-        isSignIn:false,
-        name:"",
-        email:"",
-        photo:"",
-        error:"",
-        success:false
-      }
-      setUsers(LogOutUser);
-    })
-    .catch((err)=>{
-      console.log(err);
-    })
-  }
+
 
 
   const handelSubmit=(e)=>{
     if(newUser && users.email && users.password)
     {
-      console.log("submitted");
-       const auth = getAuth();
-        createUserWithEmailAndPassword(auth, users.email, users.password)
-        .then((result) => {
-          const userInfo={...users};
-          userInfo.error='';
-          userInfo.success=true;
-          setUsers(userInfo);
-        })
-        .catch((error) => {
-          const userInfo = {...users};
-          userInfo.error = "User alredy existe";
-          userInfo.success=false;
-          setUsers(userInfo);
-          updateUserName(users.name);
-        });
+       
     }
 
     if(!newUser && users.email && users.password)
     {
-      const auth = getAuth();
-      signInWithEmailAndPassword(auth, users.email, users.password)
-      .then((result) => {
-        const userInfo={...users};
-        userInfo.error='';
-        userInfo.success=true;
-        setUsers(userInfo);
-        setLoggedInUser(userInfo);
-        navigate(from.pathname,{replace:true});
-        console.log(result.user);
-      })
-      .catch((error) => {
-        const userInfo = {...users};
-        userInfo.error = "Invalid email or password";
-        userInfo.success=false;
-        setUsers(userInfo);
-      });
+      
     }
     e.preventDefault();
   }
@@ -123,21 +56,28 @@ const Login = () => {
       setUsers(newUserInfo);
     }
   }
-  const updateUserName = (name)=>{
-    const auth = getAuth();
-    updateProfile(auth.currentUser, {
-      displayName: name,
-      }).then(() => {
-        console.log("Updated profile");
-      }).catch((error) => {
-        console.log(error)
-      });
-  }
+   const handelwithGoggleSignIn=()=>{
+      handelGoggleSignIn()
+      .then(res=>{
+        setUsers(res);
+        setLoggedInUser(res);
+        navigate(from.pathname,{replace:true});
+      })
+   }
+   const handelLoggedOut=()=>{
+    handelLogOut()
+    .then(res=>{
+      setNewUser(res);
+      setLoggedInUser(res);
+      
+    })
+    
+   }
   return (
     <div style={{textAlign:"center"}}>
       
       {
-        users.isSignIn ? <button onClick={handelLogOut}>Log Out</button> : <button onClick={handelSignIn}>Sign in</button> 
+        users.isSignIn ? <button onClick={handelLoggedOut}>Log Out</button> : <button onClick={handelwithGoggleSignIn}>Sign in</button> 
       }
       
       {
