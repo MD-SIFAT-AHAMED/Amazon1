@@ -110,6 +110,7 @@ const Login = () => {
         <br />
         <input type="submit" value='Submit' />
       </form>
+      <button>Forget Password</button>
       <p style={{color:"red"}}>{users.error}</p>
       {users.success && <p style={{color:"green"}}>User {newUser ? "Created" : "Logged In"} Successfuly</p>}
     </div>
