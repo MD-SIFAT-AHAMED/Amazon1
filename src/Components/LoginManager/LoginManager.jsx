@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from '../Login/firebase_config';
 
-import { getAuth,updateProfile,signInWithEmailAndPassword, signInWithPopup,createUserWithEmailAndPassword, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getAuth,updateProfile,sendEmailVerification ,signInWithEmailAndPassword, signInWithPopup,createUserWithEmailAndPassword, GoogleAuthProvider, signOut } from "firebase/auth";
 
 export const initializeLoginFramework = ()=>{
     initializeApp(firebaseConfig);
@@ -54,6 +54,7 @@ export const createUserEmailAndPassword =(name,email,password)=>{
               userInfo.error='';
               userInfo.success=true;
               updateUserName(name);
+              verifyEmail();
               return userInfo;
             })
             .catch((error) => {
@@ -91,3 +92,10 @@ const updateUserName = (name)=>{
       });
   }
 
+const verifyEmail = ()=>{
+  const auth = getAuth();
+  sendEmailVerification(auth.currentUser)
+  .then(() => {
+    console.log("Verified email");
+  });
+}
