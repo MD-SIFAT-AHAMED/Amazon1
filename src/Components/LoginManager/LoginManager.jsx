@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from '../Login/firebase_config';
 
-import { getAuth,updateProfile,sendEmailVerification ,signInWithEmailAndPassword, signInWithPopup,createUserWithEmailAndPassword, GoogleAuthProvider, signOut } from "firebase/auth";
+import { getAuth,updateProfile,sendPasswordResetEmail,sendEmailVerification ,signInWithEmailAndPassword, signInWithPopup,createUserWithEmailAndPassword, GoogleAuthProvider, signOut } from "firebase/auth";
 
 export const initializeLoginFramework = ()=>{
     initializeApp(firebaseConfig);
@@ -97,5 +97,18 @@ const verifyEmail = ()=>{
   sendEmailVerification(auth.currentUser)
   .then(() => {
     console.log("Verified email");
+  });
+}
+
+export const resetPassword =(email)=>{
+const auth = getAuth();
+sendPasswordResetEmail(auth, email)
+  .then(() => {
+
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
   });
 }

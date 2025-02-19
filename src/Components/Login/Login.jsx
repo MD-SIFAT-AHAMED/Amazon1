@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { UserContext } from '../../App';
 import { use } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import { initializeLoginFramework,handelLogOut , handelGoggleSignIn, createUserEmailAndPassword, signInEmailAndPassword} from '../LoginManager/LoginManager';
+import { initializeLoginFramework,handelLogOut , handelGoggleSignIn, createUserEmailAndPassword, signInEmailAndPassword, resetPassword} from '../LoginManager/LoginManager';
 
 // Initialize Firebase app
 const Login = () => {
@@ -110,7 +110,7 @@ const Login = () => {
         <br />
         <input type="submit" value='Submit' />
       </form>
-      <button>Forget Password</button>
+      <button onClick={()=>resetPassword(users.email)}>Forget Password</button>
       <p style={{color:"red"}}>{users.error}</p>
       {users.success && <p style={{color:"green"}}>User {newUser ? "Created" : "Logged In"} Successfuly</p>}
     </div>
